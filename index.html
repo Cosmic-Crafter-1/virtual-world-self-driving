@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title> World Editor </title>
+	<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+	<h1> World Editor </h1>
+	<canvas id="myCanvas"></canvas>
+
+
+	<script src="js/math/graph.js"></script>
+	<script src="js/primitives/point.js"></script>
+	<script src="js/primitives/segment.js"></script>
+
+	<script>
+		myCanvas.width = 600;
+		myCanvas.height = 600;
+
+/*
+	When you create a <canvas> element in HTML, it's like you're setting up a blank canvas where you can draw things. But to actually draw on it, you need a special tool, which is the 2D drawing context.
+
+	So, when you say var ctx = canvas.getContext('2d');, you're essentially saying, "Hey, give me that special tool I need to draw on this canvas." And then, you save that tool in a variable named ctx so you can use it later.
+
+	Once you have this ctx variable, you can use it to draw shapes, lines, text, and more on the canvas, making it more like an interactive drawing board for your web page.
+*/
+		const ctx = myCanvas.getContext("2d");
+
+		const graph = new Graph();
+		graph.draw(ctx);
+
+
+
+
+
+
+
+	</script>
+</body>
+
+</html>
