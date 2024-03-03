@@ -1,8 +1,9 @@
 
 class GraphEditor {
 
-	constructor(canvas, graph) {
-		this.canvas = canvas;
+	constructor(viewport, graph) {
+		this.viewport = viewport;
+		this.canvas = viewport.canvas;
 		this.graph = graph;
 
 		this.ctx = this.canvas.getContext("2d");
@@ -19,6 +20,8 @@ class GraphEditor {
 
 		// Event to generate a point on click.
 		// We bind this, because it was referring to canvas before and now it binds to this/GraphEditor.
+		// When attaching event listeners to DOM elements, such as buttons or canvases, it's crucial to ensure that 'this' inside the event handler functions refers to the instance of the corresponding class, rather than the DOM element itself. Without proper binding using 'bind(this)', 'this' inside the event handlers would default to referring to the DOM element, leading to confusion and incorrect access to properties and methods of the class instance. For example, in the Button class, 'this' should refer to the Button instance, not the HTML button element, to correctly handle button clicks. Similarly, in the GraphEditor class, 'this' should refer to the instance of GraphEditor, not the HTML canvas element, to correctly handle mouse events and interact with the graph data. Binding 'this' using 'bind(this)' ensures that 'this' inside the event handlers correctly refers to the class instance, enabling seamless interaction between the DOM elements and the JavaScript code.
+
 		this.canvas.addEventListener("mousedown", this.#handleMouseDown.bind(this));
 
 		// Event to generate hover effect of nearest point.
@@ -31,8 +34,8 @@ class GraphEditor {
 	}
 
 	#handleMouseMove(evt) {
-		this.mouse = new Point(evt.offsetX, evt.offsetY);
-		this.hovered = getNearestPoint(this.mouse, this.graph.points, 12);
+		this.mouse = this.viewport.getMouse(evt);
+		this.hovered = getNearestPoint(this.mouse, this.graph.points, 12 * this.viewport.zoom);
 		// Mouse moving helps to drag and sets up the loc of final mouse up.
 		if (this.dragging == true) {
 			this.selected.x = this.mouse.x;
