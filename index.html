@@ -1,3 +1,7 @@
+
+// This starts the graph editor.
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -12,20 +16,8 @@
 	<h1> World Editor </h1>
 	<canvas id="myCanvas"></canvas>
 	<div id="controls">
-		<button onclick = "addRandomPoint()"> Add Point </button>
+
 	</div>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	<script src="js/math/graph.js"></script>
@@ -33,32 +25,15 @@
 	<script src="js/primitives/Segment.js"></script>
 
 	<script>
-		function addRandomPoint () {
-			const success = graph.tryAddPoint(
-				new Point(
-					Math.random() * myCanvas.width, 
-					Math.random() * myCanvas.height
-				)
-			);
-			// When you add new point, the screen should refresh itself so that it's visible.
-			ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
-			graph.draw(ctx);
-			console.log(success);
-		}
+
+		
 
 
 		myCanvas.width = 600;
 		myCanvas.height = 600;
 
-/*
-	When you create a <canvas> element in HTML, it's like you're setting up a blank canvas where you can draw things. But to actually draw on it, you need a special tool, which is the 2D drawing context.
-
-	So, when you say var ctx = canvas.getContext('2d');, you're essentially saying, "Hey, give me that special tool I need to draw on this canvas." And then, you save that tool in a variable named ctx so you can use it later.
-
-	Once you have this ctx variable, you can use it to draw shapes, lines, text, and more on the canvas, making it more like an interactive drawing board for your web page.
-*/
 		const ctx = myCanvas.getContext("2d");
-		
+
 		const p1 = new Point(200, 200);
 		const p2 = new Point(500, 200);
 		const p3 = new Point(400, 400);

@@ -1,8 +1,19 @@
 
 class Segment {
+
 	constructor(p1, p2) {
 		this.p1 = p1;
 		this.p2 = p2;
+	}
+
+	equals(seg) {
+		return this.includes(seg.p1) && this.includes(seg.p2);
+	}
+
+	// 2 segments are same if they include same points
+	// So a helper method.
+	includes(point) {
+		return this.p1.equals(point) || this.p2.equals(point);
 	}
 
 	// How thick the lines should be = 2

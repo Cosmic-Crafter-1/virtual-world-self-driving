@@ -1,0 +1,127 @@
+
+// This shows the older UI and how to start from scratch.
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title> World Editor </title>
+	<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+	<h1> World Editor </h1>
+	<canvas id="myCanvas"></canvas>
+	<div id="controls">
+
+		<button onclick="addRandomPoint()"> Add Point </button>
+		<button onclick="addRandomSegment()"> Add Segment </button>
+
+		<button onclick="removeRandomSegment()"> Remove Segment </button>
+		<button onclick="removeRandomPoint()"> Remove Point </button>
+
+		<button onclick="removeAll()"> Remove All </button>
+
+	</div>
+
+
+	<script src="js/math/graph.js"></script>
+	<script src="js/primitives/Point.js"></script>
+	<script src="js/primitives/Segment.js"></script>
+
+	<script>
+
+		function removeAll() {
+			graph.dispose();
+			ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+			graph.draw(ctx);
+		}
+
+
+		function removeRandomPoint() {
+			if (graph.points.length == 0) {
+				console.log("No points present !!");
+				return;
+			} else {
+				const index = Math.floor(Math.random() * graph.points.length);
+				graph.removePoint(graph.points[index]);
+				ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+				graph.draw(ctx);
+			}
+		}
+
+		function removeRandomSegment() {
+			if (graph.segments.length == 0) {
+				console.log("No Segments present !!");
+				return;
+			} else {
+				const index = Math.floor(Math.random() * graph.segments.length);
+				graph.removeSegment(graph.segments[index]);
+				ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+				graph.draw(ctx);
+			}
+		}
+
+		function addRandomSegment() {
+			// Math floor to make sure it's integer value.
+			// Points.length gives length of points array.
+			const index1 = Math.floor(Math.random() * graph.points.length);
+			const index2 = Math.floor(Math.random() * graph.points.length);
+			let success = graph.tryAddSegment(
+				// Here we are accessing the random elements "Present inside the points array", to draw segment btw the 2.
+				// This means, the points randomly gen are within the boundaries of my existing array, WOW !!
+				new Segment(graph.points[index1], graph.points[index2])
+			);
+			ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+			graph.draw(ctx);
+			console.log(success);
+		}
+
+
+		function addRandomPoint() {
+			const success = graph.tryAddPoint(
+				new Point(
+					Math.random() * myCanvas.width,
+					Math.random() * myCanvas.height
+				)
+			);
+			// When you add new point, the screen should refresh itself so that it's visible.
+			ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+			graph.draw(ctx);
+			console.log(success);
+		}
+
+
+		myCanvas.width = 600;
+		myCanvas.height = 600;
+
+		/*
+			When you create a <canvas> element in HTML, it's like you're setting up a blank canvas where you can draw things. But to actually draw on it, you need a special tool, which is the 2D drawing context.
+		
+			So, when you say var ctx = canvas.getContext('2d');, you're essentially saying, "Hey, give me that special tool I need to draw on this canvas." And then, you save that tool in a variable named ctx so you can use it later.
+		
+			Once you have this ctx variable, you can use it to draw shapes, lines, text, and more on the canvas, making it more like an interactive drawing board for your web page.
+		*/
+		const ctx = myCanvas.getContext("2d");
+
+		const p1 = new Point(200, 200);
+		const p2 = new Point(500, 200);
+		const p3 = new Point(400, 400);
+		const p4 = new Point(100, 300);
+
+		const s1 = new Segment(p1, p2);
+		const s2 = new Segment(p1, p3);
+		const s3 = new Segment(p1, p4);
+		const s4 = new Segment(p2, p3);
+
+
+		const graph = new Graph([p1, p2, p3, p4], [s1, s2, s3, s4]);
+		graph.draw(ctx);
+
+	</script>
+</body>
+
+</html>
