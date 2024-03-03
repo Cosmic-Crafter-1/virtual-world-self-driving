@@ -13,7 +13,7 @@ class Point {
 		ctx.beginPath();
 		ctx.fillStyle = color;
 		// We want a full circle so 0 deg to 2 PI = 360 deg.
-		ctx.arc(this.x, this.y, rad, 0, Math.PI * 2);
+		ctx.arc(this.x, this.y, radius, 0, Math.PI * 2);
 		ctx.fill();
 	}
 }

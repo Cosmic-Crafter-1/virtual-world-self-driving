@@ -14,8 +14,8 @@
 
 
 	<script src="js/math/graph.js"></script>
-	<script src="js/primitives/point.js"></script>
-	<script src="js/primitives/segment.js"></script>
+	<script src="js/primitives/Point.js"></script>
+	<script src="js/primitives/Segment.js"></script>
 
 	<script>
 		myCanvas.width = 600;
@@ -29,8 +29,16 @@
 	Once you have this ctx variable, you can use it to draw shapes, lines, text, and more on the canvas, making it more like an interactive drawing board for your web page.
 */
 		const ctx = myCanvas.getContext("2d");
+		
+		const p1 = new Point(200, 200);
+		const p2 = new Point(500, 200);
+		const p3 = new Point(400, 400);
+		const p4 = new Point(100, 300);
 
-		const graph = new Graph();
+
+
+
+		const graph = new Graph([p1, p2, p3, p4]);
 		graph.draw(ctx);
 
 
