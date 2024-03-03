@@ -17,10 +17,14 @@ class Segment {
 	}
 
 	// How thick the lines should be = 2
-	draw(ctx, width = 2, color = "black") {
+	// Sets default values for the width, color, and dash properties of an object passed as an argument to the draw function. If no argument is provided or if it's undefined, an empty object is used as the default value to prevent errors.
+
+	draw(ctx, {width = 2, color = "black", dash =[] } = {}) {
 		ctx.beginPath();
 		ctx.lineWidth = width;
 		ctx.strokeStyle = color;
+		// Built in function.
+		ctx.setLineDash(dash);
 		// Moves the pen to the starting point of the line.
 		ctx.moveTo(this.p1.x, this.p1.y);
 		// Draws a line from the current pen position to the ending point.
@@ -28,5 +32,7 @@ class Segment {
 		// Actually draws the line on the canvas.
 		// Before stroke() is called, moveTo() and lineTo() define an invisible path, like planning out a route on a map, and stroke() is what actually makes that path visible by drawing it on the canvas.
 		ctx.stroke();
+		// Use empty array[] to reset the dash to a solid line.
+		ctx.setLineDash([]);
 	}
 }
