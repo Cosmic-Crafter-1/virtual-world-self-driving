@@ -5,24 +5,43 @@ class Viewport {
 		this.ctx = canvas.getContext("2d");
 
 		this.zoom = 1;
+		// To zoom in from center. This defines center of viewport.
 		this.center = new Point(canvas.width / 2, canvas.height / 2);
+		// Defined in utils. Generates a new point multiplying the above with -1.
 		this.offset = scale(this.center, -1);
 		// Object notation.
 		this.drag = {
-			start: new Point(0,0),
-			end: new Point(0,0),
-			offset: new Point(0,0),
+			start: new Point(0, 0),
+			end: new Point(0, 0),
+			offset: new Point(0, 0),
 			active: false
 		};
 
 		this.#addEventListeners();
 	}
 
-	getMouse(evt) {
-		return new Point(
-			evt.offsetX * this.zoom,
-			evt.offsetY * this.zoom
+	reset() {
+		this.ctx.restore();
+		this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+		this.ctx.save();
+		this.ctx.translate(this.center.x, this.center.y);
+		// Scale along X and Y axes.
+		this.ctx.scale(1 / this.zoom, 1 / this.zoom);
+		// First get the center offset.
+		const offset = this.getOffset();
+		// Move the origin point of the canvas's coordinate system to a new position specified by the given horizontal (x) and vertical (y) offset.
+		this.ctx.translate(offset.x, offset.y);
+	}
+
+	getMouse(evt, subtractDragOffset = false) {
+		const p = new Point(
+			// Calculate horizontal distance from canvas center to mouse cursor
+			// Suppose the mouse cursor is at (evt.offsetX, evt.offsetY), and the center of your canvas content is at (this.center.x, this.center.y).
+			// Subtracting the x-coordinate of the canvas center from the x-coordinate of the mouse cursor gives you how far the cursor is from the center horizontally.
+			(evt.offsetX - this.center.x) * this.zoom - this.offset.x,
+			(evt.offsetY - this.center.y) * this.zoom - this.offset.y
 		);
+		return subtractDragOffset ? subtract(p, this.drag.offset) : p;
 	}
 
 	// To make the scrolling smoother, we add this cumulative in real-time.
@@ -62,12 +81,12 @@ class Viewport {
 			this.offset = add(this.offset, this.drag.offset);
 			// Reset drag location.
 			this.drag = {
-				start: new Point(0,0),
-				end: new Point(0,0),
-				offset: new Point(0,0),
+				start: new Point(0, 0),
+				end: new Point(0, 0),
+				offset: new Point(0, 0),
 				active: false
 			};
-	
+
 		}
 	}
 

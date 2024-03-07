@@ -6,6 +6,21 @@ class Graph {
 		this.segments = segments;
 	}
 
+	static load(info) {
+		const points = info.points.map((i) => new Point(i.x, i.y));
+
+		const segments = [];
+		for (const segInfo of info.segments) {
+			segments.push(new Segment(
+				// The p1 and p2 from localStorage are not points, but objects.
+				// Therefore we need to find from the arrays, the points that correspond to segmentInfo's object points.
+				points.find((p) => p.equals(segInfo.p1)),
+				points.find((p) => p.equals(segInfo.p2)),
+			));
+		}
+		return new Graph(points, segments);
+	}
+
 	addPoint(point) {
 		this.points.push(point);
 	}

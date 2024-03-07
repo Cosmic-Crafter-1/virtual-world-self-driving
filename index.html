@@ -15,16 +15,22 @@
 	<h1> World Editor </h1>
 	<canvas id="myCanvas"></canvas>
 	<div id="controls">
+		<button onclick="dispose()"> Clear </button>
+		<button onclick="save()"> Save </button>
 
 	</div>
 
-
+	<script src="js/world.js"></script>
 	<script src="js/graphEditor.js"></script>
 	<script src="js/viewport.js"></script>
 	<script src="js/math/graph.js"></script>
 	<script src="js/math/utils.js"></script>
 	<script src="js/primitives/Point.js"></script>
 	<script src="js/primitives/Segment.js"></script>
+	<script src="js/primitives/polygon.js"></script>
+	<script src="js/primitives/envelope.js"></script>
+
+
 
 	<script>
 
@@ -33,35 +39,50 @@
 
 		const ctx = myCanvas.getContext("2d");
 
-		const p1 = new Point(200, 200);
-		const p2 = new Point(500, 200);
-		const p3 = new Point(400, 400);
-		const p4 = new Point(100, 300);
+		// Check if there exists an already saved file.
+		const graphString = localStorage.getItem("graph");
+		// Get the points info stored as string.
+		const graphInfo = graphString ? JSON.parse(graphString) : null;
 
-		const s1 = new Segment(p1, p2);
-		const s2 = new Segment(p1, p3);
-		const s3 = new Segment(p1, p4);
-		const s4 = new Segment(p2, p3);
+		// const result = condition ? "Condition is true" : "Condition is false";
+		const graph = graphInfo
+		? Graph.load(graphInfo)
+		: new Graph();
 
-
-		const graph = new Graph([p1, p2, p3, p4], [s1, s2, s3, s4]);
+		// Instantiate the world which will contain objects.
+		const world = new World(graph);
 		const viewport = new Viewport(myCanvas);
 		const graphEditor = new GraphEditor(viewport, graph);
 
 		animate();
 
 		function animate() {
-			ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
-			ctx.save();
-			ctx.translate(viewport.center.x, viewport.center.y);
-			// Scale along X and Y axes.
-			ctx.scale(1 / viewport.zoom, 1 / viewport.zoom);
-			const offset = viewport.getOffset();
-			// Move the origin point of the canvas's coordinate system to a new position specified by the given horizontal (x) and vertical (y) offsets.
-			ctx.translate(offset.x, offset.y);
+			viewport.reset();
+			
+			// World comes before graphEditor bcz it will contain things and we need to see editor tools on top of that.
+			world.generate();
+			world.draw(ctx);
+			// Add transparency for the editor.
+			ctx.globalAlpha = 0.3;
 			graphEditor.display();
-			ctx.restore();
+
+			// The polygon refers to the outer road on points.
+			// new Polygon(graph.points).draw(ctx);
+
+			// Envelope is the area around the points that looks like road.
+			// new Envelope(graph.segments[0], 200, 20).draw(ctx);
 			requestAnimationFrame(animate);
+		}
+
+		function dispose() {
+			graphEditor.dispose();
+		}
+
+		//localStorage.setItem(key, value): This method is used to store data in the web browser's local storage. It takes two parameters: the key under which the data will be stored and the value to be stored.
+		// In this case, the key is "graph", indicating that the data will be stored under the name "graph" in the local storage.
+		// JSON.stringify(graph): Before storing the graph object, it needs to be converted to a string because local storage can only store string data. The JSON.stringify() method converts a JavaScript object (graph in this case) into a JSON string.
+		function save() {
+			localStorage.setItem("graph", JSON.stringify(graph));
 		}
 
 	</script>
