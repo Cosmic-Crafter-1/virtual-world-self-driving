@@ -25,6 +25,29 @@ class Segment {
 		return this.p1.equals(point) || this.p2.equals(point);
 	}
 
+	distanceToPoint(point) {
+		const proj = this.projectPoint(point);
+		if (proj.offset > 0 && proj.offset < 1) {
+			return distance(point, proj.point);
+		}
+		const distToP1 = distance(point, this.p1);
+		const distToP2 = distance(point, this.p2);
+		return Math.min(distToP1, distToP2);
+	}
+
+	projectPoint(point) {
+		const a = subtract(point, this.p1);
+		const b = subtract(this.p2, this.p1);
+		const normB = normalize(b);
+		// Calculate the scalar projection of a onto b using the dot product.
+		const scalar = dot(a, normB);
+		const proj = {
+			point: add(this.p1, scale(normB, scalar)),
+			offset: scalar / magnitude(b),
+		};
+		return proj;
+	}
+
 	// How thick the lines should be = 2
 	// Sets default values for the width, color, and dash properties of an object passed as an argument to the draw function. If no argument is provided or if it's undefined, an empty object is used as the default value to prevent errors.
 

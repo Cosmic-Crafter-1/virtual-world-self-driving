@@ -54,13 +54,16 @@
 		const viewport = new Viewport(myCanvas);
 		const graphEditor = new GraphEditor(viewport, graph);
 
+		let oldGraphHash = graph.hash();
 		animate();
 
 		function animate() {
 			viewport.reset();
-			
+			if (graph.hash() != oldGraphHash) {
 			// World comes before graphEditor bcz it will contain things and we need to see editor tools on top of that.
 			world.generate();
+			oldGraphHash = graph.hash();
+			}
 			world.draw(ctx);
 			// Add transparency for the editor.
 			ctx.globalAlpha = 0.3;
